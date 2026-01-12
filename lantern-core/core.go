@@ -499,7 +499,7 @@ func (lc *LanternCore) ReportIssue(
 	return nil
 }
 
-// GetDataCapInfo returns information about this user's data cap. Only valid for free accounts
+// DataCapInfo returns information about this user's data cap. Only valid for free accounts
 func (lc *LanternCore) DataCapInfo() ([]byte, error) {
 	return lc.apiClient.DataCapInfo(context.Background())
 }
