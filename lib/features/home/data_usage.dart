@@ -34,6 +34,7 @@ class DataUsage extends ConsumerWidget {
         final dataCapResetTime = formatDailyResetTime(dataCap.allotmentEndTime);
         String dataCapMessage =
             "daily_data_cap_reached_message".i18n.fill([dataCapResetTime]);
+
         ///If parsing fails and returns empty string
         ///do not show time
         if (dataCapResetTime.isEmpty) {
@@ -46,7 +47,8 @@ class DataUsage extends ConsumerWidget {
         final int usedData =
             usedBytes == 0 ? 0 : max(1, usedBytes.toMB.round());
         appLogger.debug(
-            "Data Usage - Total: $totalData MB, Used: $usedData MB, Remaining: $remainingData MB");
+          "Data Usage - Total: $totalData MB, Used: $usedData MB, Remaining: $remainingData MB",
+        );
 
         final usageString = '$usedData/$totalData';
 
@@ -55,14 +57,16 @@ class DataUsage extends ConsumerWidget {
             : (dataCap.bytesUsed / dataCap.bytesAllotted).clamp(0.0, 1.0);
 
         return Container(
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Color(0x19006162),
-              blurRadius: 32,
-              offset: Offset(0, 4),
-              spreadRadius: 0,
-            )
-          ]),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x19006162),
+                blurRadius: 32,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              ),
+            ],
+          ),
           child: Card(
             margin: EdgeInsets.zero,
             child: Padding(
@@ -127,12 +131,13 @@ class DataUsage extends ConsumerWidget {
                         value: value,
                         minHeight: 9,
                         borderRadius: const BorderRadius.all(
-                            Radius.circular(defaultSize)),
+                          Radius.circular(defaultSize),
+                        ),
                         trackGap: 10,
                         backgroundColor: AppColors.gray1,
-                        valueColor: AlwaysStoppedAnimation(isDataCapReached
-                            ? AppColors.red6
-                            : AppColors.yellow3),
+                        valueColor: AlwaysStoppedAnimation(
+                          isDataCapReached ? AppColors.red6 : AppColors.yellow3,
+                        ),
                       ),
                     ),
                   ),
