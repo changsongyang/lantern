@@ -46,7 +46,7 @@ dependencies:
   #Routing
   auto_route: ^10.2.1
   #UI Utils
-  animated_toggle_switch: ^0.8.5
+  animated_toggle_switch: ^0.8.7
   animated_text_kit: ^4.3.0
   flutter_screenutil: ^5.9.3
   auto_size_text: ^3.0.0
