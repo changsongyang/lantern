@@ -52,7 +52,8 @@ class _OnboardingState extends ConsumerState<Onboarding> {
           child: DividerSpace(padding: EdgeInsets.zero),
         ),
       ),
-      body: Padding(
+      body: Container(
+        color: AppColors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: [
@@ -337,7 +338,12 @@ class RouteModeContainer extends StatelessWidget {
                 value: true,
               ),
               SizedBox(width: 16.0),
-              Text(title()),
+              Text(
+                title(),
+                style: textTheme.titleMedium!.copyWith(
+                  color: AppColors.black,
+                ),
+              ),
               SizedBox(width: 8.0),
               Container(
                   padding:
@@ -357,10 +363,8 @@ class RouteModeContainer extends StatelessWidget {
           SizedBox(height: 4.0),
           Padding(
             padding: const EdgeInsets.only(left: 38),
-            child: Text(
-              description(),
-              style: textTheme.bodyMedium!.copyWith(color: AppColors.gray8),
-            ),
+            child: Text(description(),
+                style: textTheme.bodyMedium!.copyWith(color: AppColors.gray8)),
           )
         ],
       ),
