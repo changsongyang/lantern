@@ -1094,7 +1094,7 @@ class LanternPlatformService implements LanternCoreService {
     try {
       await _methodChannel.invokeMethod('addServerBasedOnURLs', {
         'urls': urls,
-        'skipCertVerification': skipCertVerification,
+        'skipValidation': skipCertVerification,
         'serverName': serverName,
       });
       return Right(unit);
