@@ -111,7 +111,6 @@ Future<void> _logDeviceInfo() async {
         'model': d.model,
         'name': d.name,
         'systemVersion': d.systemVersion,
-        'identifierForVendor': d.identifierForVendor,
       });
     } else if (PlatformUtils.isMacOS) {
       final d = await deviceInfo.macOsInfo;
