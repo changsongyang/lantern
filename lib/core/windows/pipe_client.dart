@@ -287,16 +287,27 @@ class PipeClient {
 
   Stream<List<String>> watchLogs() {
     return _watchRaw('WatchLogs').transform(
-      StreamTransformer.fromHandlers(handleData: (line, sink) {
-        try {
-          final obj = jsonDecode(line);
-          if (obj is Map && obj['event'] == 'Logs') {
-            final lines =
-                (obj['lines'] as List?)?.cast<String>() ?? const <String>[];
-            if (lines.isNotEmpty) sink.add(lines);
+      StreamTransformer.fromHandlers(
+        handleData: (line, sink) {
+          try {
+            final obj = jsonDecode(line);
+            if (obj is Map && obj['event'] == 'Logs') {
+              final lines =
+                  (obj['lines'] as List?)?.cast<String>() ?? const <String>[];
+              if (lines.isNotEmpty) sink.add(lines);
+            }
+          } catch (e) {
+            appLogger.error('[PipeClient] failed to parse pipe line: $line', e);
           }
-        } catch (_) {}
-      }),
+        },
+        handleError: (e, st, sink) {
+          appLogger.error('[PipeClient] watchLogs stream error', e, st);
+          sink.addError(e, st);
+        },
+        handleDone: (sink) {
+          sink.close();
+        },
+      ),
     );
   }
 }
