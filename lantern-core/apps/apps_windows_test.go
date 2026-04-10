@@ -84,31 +84,10 @@ func TestIsNonUserFacingUninstallEntry(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "no display",
+			name: "system component explicitly zero",
 			metadata: uninstallEntryMetadata{
-				noDisplaySet: true,
-				noDisplay:    1,
-			},
-			want: true,
-		},
-		{
-			name: "parent key name",
-			metadata: uninstallEntryMetadata{
-				parentKeyName: "KB12345",
-			},
-			want: true,
-		},
-		{
-			name: "release type update",
-			metadata: uninstallEntryMetadata{
-				releaseType: "Security Update",
-			},
-			want: true,
-		},
-		{
-			name: "release type normal",
-			metadata: uninstallEntryMetadata{
-				releaseType: "Feature Pack",
+				systemComponentSet: true,
+				systemComponent:    0,
 			},
 			want: false,
 		},
@@ -124,6 +103,154 @@ func TestIsNonUserFacingUninstallEntry(t *testing.T) {
 			got := isNonUserFacingUninstallEntry(tt.metadata)
 			if got != tt.want {
 				t.Fatalf("isNonUserFacingUninstallEntry(%+v) = %v, want %v", tt.metadata, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestResolveWrappedExecutable(t *testing.T) {
+	t.Run("returns original path when executable is not wrapper", func(t *testing.T) {
+		dir := t.TempDir()
+		normalExe := filepath.Join(dir, "Claude.exe")
+		if err := os.WriteFile(normalExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write normal exe: %v", err)
+		}
+
+		got := resolveWrappedExecutable(normalExe, "Claude")
+		if got != normalExe {
+			t.Fatalf("resolveWrappedExecutable(%q, Claude) = %q, want %q", normalExe, got, normalExe)
+		}
+	})
+
+	t.Run("resolves Update.exe wrapper to hinted app exe", func(t *testing.T) {
+		dir := t.TempDir()
+		updateExe := filepath.Join(dir, "Update.exe")
+		claudeExe := filepath.Join(dir, "Claude.exe")
+		if err := os.WriteFile(updateExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write update exe: %v", err)
+		}
+		if err := os.WriteFile(claudeExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write claude exe: %v", err)
+		}
+
+		got := resolveWrappedExecutable(updateExe, "Claude")
+		if got != claudeExe {
+			t.Fatalf("resolveWrappedExecutable(%q, Claude) = %q, want %q", updateExe, got, claudeExe)
+		}
+	})
+
+	t.Run("returns only non-wrapper executable when unique", func(t *testing.T) {
+		dir := t.TempDir()
+		updateExe := filepath.Join(dir, "Update.exe")
+		appExe := filepath.Join(dir, "App.exe")
+		if err := os.WriteFile(updateExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write update exe: %v", err)
+		}
+		if err := os.WriteFile(appExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write app exe: %v", err)
+		}
+
+		got := resolveWrappedExecutable(updateExe, "")
+		if got != appExe {
+			t.Fatalf("resolveWrappedExecutable(%q, \"\") = %q, want %q", updateExe, got, appExe)
+		}
+	})
+
+	t.Run("returns empty when wrapper has multiple non-wrapper candidates and no hint", func(t *testing.T) {
+		dir := t.TempDir()
+		updateExe := filepath.Join(dir, "Update.exe")
+		appA := filepath.Join(dir, "A.exe")
+		appB := filepath.Join(dir, "B.exe")
+		for _, path := range []string{updateExe, appA, appB} {
+			if err := os.WriteFile(path, []byte(""), 0o644); err != nil {
+				t.Fatalf("write %s: %v", path, err)
+			}
+		}
+
+		got := resolveWrappedExecutable(updateExe, "")
+		if got != "" {
+			t.Fatalf("resolveWrappedExecutable(%q, \"\") = %q, want empty", updateExe, got)
+		}
+	})
+
+	t.Run("returns empty for relative wrapper path", func(t *testing.T) {
+		got := resolveWrappedExecutable("Update.exe", "Claude")
+		if got != "" {
+			t.Fatalf("resolveWrappedExecutable(relative Update.exe, Claude) = %q, want empty", got)
+		}
+	})
+
+	t.Run("matches hint when name uses uppercase EXE suffix", func(t *testing.T) {
+		dir := t.TempDir()
+		updateExe := filepath.Join(dir, "Update.exe")
+		claudeExe := filepath.Join(dir, "Claude.exe")
+		if err := os.WriteFile(updateExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write update exe: %v", err)
+		}
+		if err := os.WriteFile(claudeExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write claude exe: %v", err)
+		}
+
+		got := resolveWrappedExecutable(updateExe, "CLAUDE.EXE")
+		if got != claudeExe {
+			t.Fatalf("resolveWrappedExecutable(%q, CLAUDE.EXE) = %q, want %q", updateExe, got, claudeExe)
+		}
+	})
+
+	t.Run("resolves wrapper when app executable is under app-version subdirectory", func(t *testing.T) {
+		dir := t.TempDir()
+		updateExe := filepath.Join(dir, "Update.exe")
+		appVersionDir := filepath.Join(dir, "app-2.1.78")
+		claudeExe := filepath.Join(appVersionDir, "Claude.exe")
+		if err := os.WriteFile(updateExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write update exe: %v", err)
+		}
+		if err := os.MkdirAll(appVersionDir, 0o755); err != nil {
+			t.Fatalf("mkdir app-version dir: %v", err)
+		}
+		if err := os.WriteFile(claudeExe, []byte(""), 0o644); err != nil {
+			t.Fatalf("write claude exe: %v", err)
+		}
+
+		got := resolveWrappedExecutable(updateExe, "Claude")
+		if got != claudeExe {
+			t.Fatalf("resolveWrappedExecutable(%q, Claude) = %q, want %q", updateExe, got, claudeExe)
+		}
+	})
+}
+
+func TestShortcutDisplayName(t *testing.T) {
+	tests := []struct {
+		name         string
+		shortcutName string
+		targetExe    string
+		want         string
+	}{
+		{
+			name:         "trims lower-case extension",
+			shortcutName: "Claude.lnk",
+			targetExe:    `C:\Program Files\Claude\Claude.exe`,
+			want:         "Claude",
+		},
+		{
+			name:         "trims upper-case extension",
+			shortcutName: "Claude.LNK",
+			targetExe:    `C:\Program Files\Claude\Claude.exe`,
+			want:         "Claude",
+		},
+		{
+			name:         "falls back to executable base name",
+			shortcutName: "   ",
+			targetExe:    `C:\Program Files\Claude\Claude.exe`,
+			want:         "Claude",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := shortcutDisplayName(tt.shortcutName, tt.targetExe)
+			if got != tt.want {
+				t.Fatalf("shortcutDisplayName(%q, %q) = %q, want %q", tt.shortcutName, tt.targetExe, got, tt.want)
 			}
 		})
 	}
