@@ -5,12 +5,13 @@ import 'package:lantern/core/common/common.dart' hide DeveloperMode;
 import 'package:lantern/core/models/app_data.dart';
 import 'package:lantern/core/models/app_event.dart';
 import 'package:lantern/core/models/available_servers.dart';
+import 'package:lantern/core/models/server_location.dart';
 import 'package:lantern/core/models/datacap_info.dart';
 import 'package:lantern/core/models/lantern_status.dart';
 import 'package:lantern/core/models/macos_extension_state.dart';
 import 'package:lantern/core/models/plan_data.dart';
 import 'package:lantern/core/models/private_server_status.dart';
-import 'package:lantern/lantern/protos/protos/auth.pb.dart';
+import 'package:lantern/core/models/user.dart';
 
 import '../core/services/app_purchase.dart';
 
@@ -67,11 +68,22 @@ abstract class LanternCoreService {
 
   Future<Either<Failure, Server>> getAutoServerLocation();
 
+  Future<Either<Failure, ServerLocation>> getSelectedServerLocation();
+
   Future<Either<Failure, String>> featureFlag();
 
   Future<Either<Failure, Unit>> setBlockAdsEnabled(bool enabled);
 
   Future<Either<Failure, bool>> isBlockAdsEnabled();
+
+  Future<Either<Failure, bool>> isSmartRoutingEnabled();
+
+  Future<Either<Failure, bool>> isTelemetryEnabled();
+
+  Future<Either<Failure, bool>> isOAuthLogin();
+
+  Future<Either<Failure, String>> getOAuthProvider();
+
 
   ///Payments methods
   Future<Either<Failure, String>> stipeSubscriptionPaymentRedirect(
@@ -144,25 +156,25 @@ abstract class LanternCoreService {
   ///OAuth methods
   Future<Either<Failure, String>> getOAuthLoginUrl(String provider);
 
-  Future<Either<Failure, UserResponse>> oAuthLoginCallback(String token);
+  Future<Either<Failure, UserResponseModel>> oAuthLoginCallback(String token);
 
   Future<Either<Failure, Unit>> activationCode(
       {required String email, required String resellerCode});
 
   ///User management methods
-  Future<Either<Failure, UserResponse>> login(
+  Future<Either<Failure, UserResponseModel>> login(
       {required String email, required String password});
 
   Future<Either<Failure, Unit>> signUp(
       {required String email, required String password});
 
-  Future<Either<Failure, UserResponse>> getUserData();
+  Future<Either<Failure, UserResponseModel>> getUserData();
 
-  Future<Either<Failure, UserResponse>> fetchUserData();
+  Future<Either<Failure, UserResponseModel>> fetchUserData();
 
   Future<Either<Failure, DataCapUsageResponse>> getDataCapInfo();
 
-  Future<Either<Failure, UserResponse>> logout(String email);
+  Future<Either<Failure, UserResponseModel>> logout(String email);
 
   //Change email
   Future<Either<Failure, String>> startChangeEmail(
@@ -187,7 +199,7 @@ abstract class LanternCoreService {
   });
 
   //Delete account
-  Future<Either<Failure, UserResponse>> deleteAccount(
+  Future<Either<Failure, UserResponseModel>> deleteAccount(
       {required String email, required String password, bool isSSO = false});
 
   //Device Remove
@@ -219,10 +231,10 @@ abstract class LanternCoreService {
       required String accessToken,
       required String serverName});
 
-  Future<Either<Failure, Unit>> addServerBasedOnURLs(
-      {required String urls,
-      required bool skipCertVerification,
-      required String serverName});
+  Future<Either<Failure, List<String>>> addServerBasedOnURLs({
+    required String urls,
+    required bool skipCertVerification,
+  });
 
   Future<Either<Failure, Unit>> cancelDeployment();
 
@@ -263,4 +275,19 @@ abstract class LanternCoreService {
   Future<Either<Failure, List<String>>> getSplitTunnelItems(
     SplitTunnelFilterType type,
   );
+
+  /// Developer-mode helpers exposing radiance settings/env controls.
+  Future<Either<Failure, Unit>> patchSettings(Map<String, dynamic> updates);
+
+  Future<Either<Failure, Map<String, dynamic>>> getSettings();
+
+  Future<Either<Failure, Map<String, String>>> patchEnvVars(
+    Map<String, String> updates,
+  );
+
+  Future<Either<Failure, Map<String, String>>> getEnvVars();
+
+  Future<Either<Failure, Unit>> runURLTests();
+
+  Future<Either<Failure, Unit>> sendConfigRequest();
 }

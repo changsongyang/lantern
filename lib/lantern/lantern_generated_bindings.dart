@@ -5266,6 +5266,17 @@ class LanternBindings {
   late final __FCmulcr = __FCmulcrPtr
       .asFunction<_Fcomplex Function(_Fcomplex, double)>();
 
+  ffi.Pointer<ffi.Char> getAppDataDir() {
+    return _getAppDataDir();
+  }
+
+  late final _getAppDataDirPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'getAppDataDir',
+      );
+  late final _getAppDataDir = _getAppDataDirPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
   ffi.Pointer<ffi.Char> setup(
     ffi.Pointer<ffi.Char> _logDir,
     ffi.Pointer<ffi.Char> _dataDir,
@@ -5339,6 +5350,35 @@ class LanternBindings {
       );
   late final _updateTelemetryConsent = _updateTelemetryConsentPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(int)>();
+
+  int isTelemetryEnabled() {
+    return _isTelemetryEnabled();
+  }
+
+  late final _isTelemetryEnabledPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>('isTelemetryEnabled');
+  late final _isTelemetryEnabled = _isTelemetryEnabledPtr
+      .asFunction<int Function()>();
+
+  int isOAuthLogin() {
+    return _isOAuthLogin();
+  }
+
+  late final _isOAuthLoginPtr = _lookup<ffi.NativeFunction<ffi.Int Function()>>(
+    'isOAuthLogin',
+  );
+  late final _isOAuthLogin = _isOAuthLoginPtr.asFunction<int Function()>();
+
+  ffi.Pointer<ffi.Char> getOAuthProvider() {
+    return _getOAuthProvider();
+  }
+
+  late final _getOAuthProviderPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'getOAuthProvider',
+      );
+  late final _getOAuthProvider = _getOAuthProviderPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
 
   ffi.Pointer<ffi.Char> availableFeatures() {
     return _availableFeatures();
@@ -5518,6 +5558,17 @@ class LanternBindings {
         )
       >();
 
+  ffi.Pointer<ffi.Char> getSelectedServerJSON() {
+    return _getSelectedServerJSON();
+  }
+
+  late final _getSelectedServerJSONPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'getSelectedServerJSON',
+      );
+  late final _getSelectedServerJSON = _getSelectedServerJSONPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
   ffi.Pointer<ffi.Char> getAutoLocation() {
     return _getAutoLocation();
   }
@@ -5542,28 +5593,6 @@ class LanternBindings {
   late final _isTagAvailable = _isTagAvailablePtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
 
-  ffi.Pointer<ffi.Char> startAutoLocationListener() {
-    return _startAutoLocationListener();
-  }
-
-  late final _startAutoLocationListenerPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
-        'startAutoLocationListener',
-      );
-  late final _startAutoLocationListener = _startAutoLocationListenerPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function()>();
-
-  ffi.Pointer<ffi.Char> stopAutoLocationListener() {
-    return _stopAutoLocationListener();
-  }
-
-  late final _stopAutoLocationListenerPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
-        'stopAutoLocationListener',
-      );
-  late final _stopAutoLocationListener = _stopAutoLocationListenerPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function()>();
-
   ffi.Pointer<ffi.Char> getAvailableServers() {
     return _getAvailableServers();
   }
@@ -5574,6 +5603,45 @@ class LanternBindings {
       );
   late final _getAvailableServers = _getAvailableServersPtr
       .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
+  ffi.Pointer<ffi.Char> startVPN() {
+    return _startVPN();
+  }
+
+  late final _startVPNPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>('startVPN');
+  late final _startVPN = _startVPNPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
+  ffi.Pointer<ffi.Char> stopVPN() {
+    return _stopVPN();
+  }
+
+  late final _stopVPNPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>('stopVPN');
+  late final _stopVPN = _stopVPNPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
+  ffi.Pointer<ffi.Char> connectToServer(ffi.Pointer<ffi.Char> _tag) {
+    return _connectToServer(_tag);
+  }
+
+  late final _connectToServerPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)
+        >
+      >('connectToServer');
+  late final _connectToServer = _connectToServerPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
+
+  int isVPNConnected() {
+    return _isVPNConnected();
+  }
+
+  late final _isVPNConnectedPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>('isVPNConnected');
+  late final _isVPNConnected = _isVPNConnectedPtr.asFunction<int Function()>();
 
   ffi.Pointer<ffi.Char> getUserData() {
     return _getUserData();
@@ -5904,9 +5972,8 @@ class LanternBindings {
   ffi.Pointer<ffi.Char> deleteAccount(
     ffi.Pointer<ffi.Char> _email,
     ffi.Pointer<ffi.Char> _password,
-    int _isSSO,
   ) {
-    return _deleteAccount(_email, _password, _isSSO);
+    return _deleteAccount(_email, _password);
   }
 
   late final _deleteAccountPtr =
@@ -5915,7 +5982,6 @@ class LanternBindings {
           ffi.Pointer<ffi.Char> Function(
             ffi.Pointer<ffi.Char>,
             ffi.Pointer<ffi.Char>,
-            ffi.Int,
           )
         >
       >('deleteAccount');
@@ -5924,7 +5990,6 @@ class LanternBindings {
         ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
-          int,
         )
       >();
 
@@ -6155,29 +6220,18 @@ class LanternBindings {
   ffi.Pointer<ffi.Char> addServerBasedOnURLs(
     ffi.Pointer<ffi.Char> _urls,
     int _skipCertVerification,
-    ffi.Pointer<ffi.Char> _serverName,
   ) {
-    return _addServerBasedOnURLs(_urls, _skipCertVerification, _serverName);
+    return _addServerBasedOnURLs(_urls, _skipCertVerification);
   }
 
   late final _addServerBasedOnURLsPtr =
       _lookup<
         ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-            ffi.Pointer<ffi.Char>,
-            ffi.Int,
-            ffi.Pointer<ffi.Char>,
-          )
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int)
         >
       >('addServerBasedOnURLs');
   late final _addServerBasedOnURLs = _addServerBasedOnURLsPtr
-      .asFunction<
-        ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>,
-          int,
-          ffi.Pointer<ffi.Char>,
-        )
-      >();
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, int)>();
 
   ffi.Pointer<ffi.Char> setBlockAdsEnabled(int enabled) {
     return _setBlockAdsEnabled(enabled);
@@ -6280,17 +6334,6 @@ class LanternBindings {
         )
       >();
 
-  ffi.Pointer<ffi.Char> getAppDataDir() {
-    return _getAppDataDir();
-  }
-
-  late final _getAppDataDirPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
-        'getAppDataDir',
-      );
-  late final _getAppDataDir = _getAppDataDirPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function()>();
-
   ffi.Pointer<ffi.Char> getEnabledApps() {
     return _getEnabledApps();
   }
@@ -6302,82 +6345,75 @@ class LanternBindings {
   late final _getEnabledApps = _getEnabledAppsPtr
       .asFunction<ffi.Pointer<ffi.Char> Function()>();
 
-  ffi.Pointer<ffi.Char> startVPN(
-    ffi.Pointer<ffi.Char> _logDir,
-    ffi.Pointer<ffi.Char> _dataDir,
-    ffi.Pointer<ffi.Char> _locale,
-  ) {
-    return _startVPN(_logDir, _dataDir, _locale);
+  ffi.Pointer<ffi.Char> patchSettings(ffi.Pointer<ffi.Char> patchJSON) {
+    return _patchSettings(patchJSON);
   }
 
-  late final _startVPNPtr =
+  late final _patchSettingsPtr =
       _lookup<
         ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-            ffi.Pointer<ffi.Char>,
-            ffi.Pointer<ffi.Char>,
-            ffi.Pointer<ffi.Char>,
-          )
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)
         >
-      >('startVPN');
-  late final _startVPN = _startVPNPtr
-      .asFunction<
-        ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
-        )
-      >();
+      >('patchSettings');
+  late final _patchSettings = _patchSettingsPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
 
-  ffi.Pointer<ffi.Char> stopVPN() {
-    return _stopVPN();
+  ffi.Pointer<ffi.Char> getSettings() {
+    return _getSettings();
   }
 
-  late final _stopVPNPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>('stopVPN');
-  late final _stopVPN = _stopVPNPtr
+  late final _getSettingsPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'getSettings',
+      );
+  late final _getSettings = _getSettingsPtr
       .asFunction<ffi.Pointer<ffi.Char> Function()>();
 
-  ffi.Pointer<ffi.Char> connectToServer(
-    ffi.Pointer<ffi.Char> _location,
-    ffi.Pointer<ffi.Char> _tag,
-    ffi.Pointer<ffi.Char> _logDir,
-    ffi.Pointer<ffi.Char> _dataDir,
-    ffi.Pointer<ffi.Char> _locale,
-  ) {
-    return _connectToServer(_location, _tag, _logDir, _dataDir, _locale);
+  ffi.Pointer<ffi.Char> patchEnvVars(ffi.Pointer<ffi.Char> patchJSON) {
+    return _patchEnvVars(patchJSON);
   }
 
-  late final _connectToServerPtr =
+  late final _patchEnvVarsPtr =
       _lookup<
         ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-            ffi.Pointer<ffi.Char>,
-            ffi.Pointer<ffi.Char>,
-            ffi.Pointer<ffi.Char>,
-            ffi.Pointer<ffi.Char>,
-            ffi.Pointer<ffi.Char>,
-          )
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)
         >
-      >('connectToServer');
-  late final _connectToServer = _connectToServerPtr
-      .asFunction<
-        ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>,
-        )
-      >();
+      >('patchEnvVars');
+  late final _patchEnvVars = _patchEnvVarsPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
 
-  int isVPNConnected() {
-    return _isVPNConnected();
+  ffi.Pointer<ffi.Char> getEnvVars() {
+    return _getEnvVars();
   }
 
-  late final _isVPNConnectedPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function()>>('isVPNConnected');
-  late final _isVPNConnected = _isVPNConnectedPtr.asFunction<int Function()>();
+  late final _getEnvVarsPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'getEnvVars',
+      );
+  late final _getEnvVars = _getEnvVarsPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
+  ffi.Pointer<ffi.Char> runURLTests() {
+    return _runURLTests();
+  }
+
+  late final _runURLTestsPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'runURLTests',
+      );
+  late final _runURLTests = _runURLTestsPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
+
+  ffi.Pointer<ffi.Char> updateConfig() {
+    return _updateConfig();
+  }
+
+  late final _updateConfigPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+        'updateConfig',
+      );
+  late final _updateConfig = _updateConfigPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function()>();
 }
 
 typedef va_list = ffi.Pointer<ffi.Char>;
