@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"os"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -86,6 +87,23 @@ func getClient() (*ipc.Client, error) {
 		return nil, err
 	}
 	return core.Client(), nil
+}
+
+// SetQAEnvOverrides applies QA-only environment overrides before Radiance starts.
+func SetQAEnvOverrides(outboundSocks, tz string) error {
+	if outboundSocks != "" {
+		if err := os.Setenv("RADIANCE_OUTBOUND_SOCKS_ADDRESS", outboundSocks); err != nil {
+			return fmt.Errorf("set RADIANCE_OUTBOUND_SOCKS_ADDRESS: %w", err)
+		}
+		slog.Info("QA env override set", "name", "RADIANCE_OUTBOUND_SOCKS_ADDRESS", "value", outboundSocks)
+	}
+	if tz != "" {
+		if err := os.Setenv("TZ", tz); err != nil {
+			return fmt.Errorf("set TZ: %w", err)
+		}
+		slog.Info("QA env override set", "name", "TZ", "value", tz)
+	}
+	return nil
 }
 
 // InitLogging wires the global slog handler (file + stdout) before any other
