@@ -744,6 +744,7 @@ class LanternFFIService implements LanternCoreService {
     required BillingType type,
     required String planId,
     required String email,
+    required String idempotencyKey,
   }) async {
     try {
       appLogger.debug('Starting Stripe Subscription Payment Redirect');
@@ -753,6 +754,7 @@ class LanternFFIService implements LanternCoreService {
               type.name.toCharPtr,
               planId.toCharPtr,
               email.toCharPtr,
+              idempotencyKey.toCharPtr,
             )
             .toDartString();
       });
@@ -897,6 +899,7 @@ class LanternFFIService implements LanternCoreService {
     required String provider,
     required String planId,
     required String email,
+    required String idempotencyKey,
   }) async {
     try {
       final result = await runInBackground<String>(() async {
@@ -905,6 +908,7 @@ class LanternFFIService implements LanternCoreService {
               planId.toCharPtr,
               provider.toCharPtr,
               email.toCharPtr,
+              idempotencyKey.toCharPtr,
             )
             .toDartString();
       });
